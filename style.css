@@ -1,0 +1,1336 @@
+/* =========================================================
+   BILLIARD & KTV MANAGEMENT SYSTEM
+   style.css
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --green: #39a85b;
+    --green-dark: #2d8d4a;
+    --green-light: #e7f5eb;
+
+    --bg: #f5f7f6;
+    --card: #ffffff;
+
+    --text: #202722;
+    --muted: #66706a;
+
+    --border: #d9e0dc;
+
+    --danger: #d85a5a;
+    --danger-dark: #bd4848;
+
+    --warning: #e0a13a;
+
+    --sidebar-width: 220px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+}
+
+/* =========================================================
+   GENERAL FORM ELEMENTS
+========================================================= */
+
+input,
+select,
+textarea {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 9px 10px;
+    margin: 0;
+
+    border: 1px solid var(--border);
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+}
+
+textarea {
+    height: auto;
+    min-height: 90px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--green);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #929b96;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button {
+    width: auto;
+    min-height: 38px;
+
+    padding: 8px 13px;
+    margin: 0;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: var(--green);
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: var(--green-dark);
+}
+
+button.secondary {
+    background: #eef2ef;
+    color: #39443e;
+    border: 1px solid #d5ddd8;
+}
+
+button.secondary:hover {
+    background: #e2e8e4;
+}
+
+button.danger {
+    background: var(--danger);
+}
+
+button.danger:hover {
+    background: var(--danger-dark);
+}
+
+button.warnbtn {
+    background: var(--warning);
+    color: #ffffff;
+}
+
+button.small {
+    min-height: 30px;
+    padding: 5px 9px;
+    font-size: 11.5px;
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.loginBox,
+.login-card {
+    width: 330px;
+    max-width: 100%;
+
+    padding: 26px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.loginBox h1,
+.login-card h1 {
+    margin: 0 0 5px;
+
+    color: var(--green);
+
+    text-align: center;
+    font-size: 20px;
+}
+
+.loginBox p,
+.login-card p {
+    margin: 0 0 16px;
+
+    color: var(--muted);
+
+    text-align: center;
+    font-size: 12px;
+}
+
+.loginBox input,
+.login-card input {
+    margin-bottom: 9px;
+}
+
+.loginBox button,
+.login-card button {
+    width: 100%;
+    margin-top: 2px;
+}
+
+#msgLogin {
+    min-height: 18px;
+    margin-top: 7px;
+
+    text-align: center;
+    font-size: 13px;
+}
+
+/* =========================================================
+   APP LAYOUT
+========================================================= */
+
+#app {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: var(--sidebar-width);
+
+    padding: 15px 10px;
+
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+
+    overflow-y: auto;
+    z-index: 30;
+}
+
+#sidebar h2 {
+    margin: 4px 0;
+
+    color: var(--green);
+
+    text-align: center;
+    font-size: 15px;
+}
+
+.who {
+    margin-bottom: 14px;
+
+    color: var(--muted);
+
+    text-align: center;
+    font-size: 11px;
+}
+
+#sidebar button[data-tab] {
+    display: block;
+
+    width: 100%;
+    min-height: 40px;
+
+    margin: 2px 0;
+    padding: 9px 12px;
+
+    background: transparent;
+    color: #39443e;
+
+    text-align: left;
+    font-weight: 500;
+}
+
+#sidebar button[data-tab]:hover {
+    background: #edf3ef;
+}
+
+#sidebar button.active {
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-weight: 700;
+}
+
+#sidebar > button.secondary {
+    width: 100%;
+
+    margin-top: 14px;
+
+    text-align: left;
+}
+
+/* IMPORTANT: actual HTML uses id="main" */
+#main {
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+
+    margin-left: var(--sidebar-width);
+    padding: 22px 30px 45px;
+
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#topbar {
+    display: none;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 14px;
+
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+#topbar h2 {
+    margin: 0;
+
+    color: var(--green);
+    font-size: 15px;
+}
+
+#hamburgerBtn {
+    width: auto;
+    min-width: 42px;
+
+    padding: 6px 10px;
+
+    background: #eef2ef;
+    color: #39443e;
+
+    border: 1px solid var(--border);
+
+    font-size: 13px;
+}
+
+.topbarSpacer {
+    width: 38px;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+    display: none;
+
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+}
+
+.section.active {
+    display: block;
+}
+
+.section h2 {
+    margin: 0 0 6px;
+
+    color: #202722;
+
+    font-size: 19px;
+}
+
+.section h3 {
+    margin: 16px 0 7px;
+
+    color: #303a34;
+
+    font-size: 14px;
+}
+
+.algo,
+.small-note {
+    color: var(--muted);
+    font-size: 11.5px;
+}
+
+.algo {
+    margin-bottom: 14px;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card,
+.dashCard {
+    width: 100%;
+
+    margin-bottom: 12px;
+    padding: 14px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+/* =========================================================
+   NORMAL ROWS
+========================================================= */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+}
+
+.row + .row {
+    margin-top: 8px;
+}
+
+.row > * {
+    flex: 1 1 145px;
+    min-width: 0;
+}
+
+.row > button {
+    flex: 0 0 auto;
+}
+
+.buttonRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.buttonRow button {
+    width: auto;
+}
+
+/* =========================================================
+   BILLIARD + KTV RESERVATION
+   Supports BOTH the original HTML and the newer fixed HTML.
+========================================================= */
+
+/* Original HTML:
+   <div class="row"> customer + contact </div>
+   <div class="row"> facility + date + time + duration </div>
+*/
+#tab-billiard-reservations .card:first-of-type .row,
+#tab-ktv-reservations .card:first-of-type .row {
+    display: grid;
+    width: 100%;
+    gap: 10px;
+}
+
+/* First row = 2 equal fields */
+#tab-billiard-reservations .card:first-of-type .row:first-child,
+#tab-ktv-reservations .card:first-of-type .row:first-child {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Second row = 4 equal fields */
+#tab-billiard-reservations .card:first-of-type .row:nth-child(2),
+#tab-ktv-reservations .card:first-of-type .row:nth-child(2) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Newer HTML support */
+.reservationFormGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+}
+
+.reservationFormGrid > input,
+.reservationFormGrid > select {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+}
+
+/* Make every reservation field exactly consistent */
+#tab-billiard-reservations input,
+#tab-billiard-reservations select,
+#tab-ktv-reservations input,
+#tab-ktv-reservations select {
+    height: 42px;
+}
+
+/* =========================================================
+   RESERVATION SEARCH
+   Full width input + compact button at far right
+========================================================= */
+
+/* Original HTML class */
+#tab-billiard-reservations .searchRow,
+#tab-ktv-reservations .searchRow,
+/* Newer HTML class */
+#tab-billiard-reservations .reservationSearchRow,
+#tab-ktv-reservations .reservationSearchRow {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-billiard-reservations .searchRow input,
+#tab-ktv-reservations .searchRow input,
+#tab-billiard-reservations .reservationSearchRow input,
+#tab-ktv-reservations .reservationSearchRow input {
+    width: 100%;
+    min-width: 0;
+}
+
+#tab-billiard-reservations .searchRow button,
+#tab-ktv-reservations .searchRow button,
+#tab-billiard-reservations .reservationSearchRow button,
+#tab-ktv-reservations .reservationSearchRow button {
+    width: auto;
+    min-width: 88px;
+    height: 42px;
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.msg {
+    min-height: 14px;
+
+    margin-top: 8px;
+    padding: 8px 10px;
+
+    border-radius: 6px;
+
+    font-size: 12.5px;
+}
+
+.msg:empty {
+    display: none;
+}
+
+.success {
+    background: #e8f6ec;
+    color: #278747;
+}
+
+.error {
+    background: #fdecec;
+    color: #bd4545;
+}
+
+.warn {
+    background: #fff5df;
+    color: #a66d0b;
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashGrid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.dashCard {
+    border-left: 4px solid #aeb8b2;
+}
+
+.dashCard.available {
+    border-left-color: var(--green);
+}
+
+.dashCard.occupied {
+    border-left-color: var(--danger);
+}
+
+.dashCard.reserved {
+    border-left-color: var(--warning);
+}
+
+.timerBig {
+    margin: 5px 0;
+
+    color: var(--green);
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.timerBig.warnT {
+    color: var(--warning);
+}
+
+.timerBig.dangerT {
+    color: var(--danger);
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge {
+    display: inline-block;
+
+    padding: 3px 7px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+
+.badge.free {
+    background: #e8f6ec;
+    color: #278747;
+}
+
+.badge.occupied {
+    background: #fdecec;
+    color: #bd4545;
+}
+
+.badge.reserved,
+.badge.low {
+    background: #fff5df;
+    color: #a66d0b;
+}
+
+.badge.expired {
+    background: #f5eafa;
+    color: #8c4aa0;
+}
+
+.adminOnly {
+    display: none;
+}
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+.tableWrap,
+.table-wrap,
+.table-wrapper {
+    width: 100%;
+
+    margin-top: 8px;
+
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+
+    margin-top: 8px;
+
+    border-collapse: collapse;
+
+    background: #ffffff;
+
+    font-size: 12px;
+}
+
+.tableWrap table,
+.table-wrap table,
+.table-wrapper table {
+    margin-top: 0;
+}
+
+th,
+td {
+    padding: 7px 8px;
+
+    border: 1px solid var(--border);
+
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: #eef2ef;
+    color: #39443e;
+
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+td button {
+    width: auto;
+    min-height: 30px;
+
+    margin: 2px;
+    padding: 5px 8px;
+
+    font-size: 11px;
+}
+
+/* =========================================================
+   WALK-IN
+========================================================= */
+
+#tab-walkin .card .row:first-child {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#tab-walkin .card .row:nth-child(2) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* =========================================================
+   DRINKS & INVENTORY - ORGANIZED LAYOUT
+========================================================= */
+
+/* Main cards */
+#tab-drinks .card {
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+#tab-drinks .card h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: #303a34;
+}
+
+
+/* =========================================================
+   ADD NEW DRINK
+   Drink Name | Category | Stock | Price | Button
+========================================================= */
+
+#tab-drinks .card:nth-of-type(1) .row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(200px, 2fr)
+        minmax(150px, 1.3fr)
+        minmax(110px, 0.8fr)
+        minmax(110px, 0.8fr)
+        auto;
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-drinks .card:nth-of-type(1) .row > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+#tab-drinks .card:nth-of-type(1) .row button {
+    width: auto;
+    min-width: 95px;
+}
+
+
+/* =========================================================
+   RESTOCK DRINK
+   Drink | Quantity | Button
+========================================================= */
+
+#tab-drinks .card:nth-of-type(2) .row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(260px, 1.4fr)
+        minmax(160px, 1fr)
+        auto;
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-drinks .card:nth-of-type(2) .row > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+#tab-drinks .card:nth-of-type(2) .row button {
+    width: auto;
+    min-width: 90px;
+}
+
+
+/* =========================================================
+   EDIT DRINK
+   Better organized into 2 rows
+========================================================= */
+
+#tab-drinks .card:nth-of-type(3) .row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-drinks .card:nth-of-type(3) .row > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+
+/* Edit buttons below the fields */
+#tab-drinks .card:nth-of-type(3) .buttonRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+#tab-drinks .card:nth-of-type(3) .buttonRow button {
+    width: auto;
+}
+
+
+/* =========================================================
+   ORDER DRINKS
+   Target | Drink | Qty | Button
+========================================================= */
+
+#tab-drinks h2 + .algo + .card .row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.1fr)
+        minmax(260px, 1.4fr)
+        minmax(90px, 0.5fr)
+        auto;
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-drinks h2 + .algo + .card .row > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+
+/* =========================================================
+   SEARCH INVENTORY
+========================================================= */
+
+#tab-drinks #drinkSearchInput {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/*
+   Search card:
+   Long Search Box | Search Menu | Export PDF
+*/
+#drinkSearchInput {
+    grid-column: auto;
+}
+
+#tab-drinks .card:has(#drinkSearchInput) .row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 1fr)
+        auto
+        auto;
+
+    gap: 10px;
+
+    width: 100%;
+    align-items: center;
+}
+
+#tab-drinks .card:has(#drinkSearchInput) .row > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+#tab-drinks .card:has(#drinkSearchInput) button {
+    width: auto;
+}
+
+
+/* =========================================================
+   CONSISTENT HEIGHT
+========================================================= */
+
+#tab-drinks input,
+#tab-drinks select {
+    height: 42px;
+}
+
+#tab-drinks button {
+    min-height: 42px;
+}
+
+
+/* =========================================================
+   INVENTORY TABLE
+========================================================= */
+
+#tab-drinks .tableWrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#tab-drinks table {
+    width: 100%;
+    table-layout: auto;
+}
+
+#tab-drinks th,
+#tab-drinks td {
+    padding: 9px 10px;
+    vertical-align: middle;
+}
+
+
+/* Category */
+#tab-drinks th:nth-child(1) {
+    width: 12%;
+}
+
+/* Drink */
+#tab-drinks th:nth-child(2) {
+    width: 55%;
+}
+
+/* Price */
+#tab-drinks th:nth-child(3) {
+    width: 10%;
+}
+
+/* Stock */
+#tab-drinks th:nth-child(4) {
+    width: 10%;
+}
+
+/* Status */
+#tab-drinks th:nth-child(5) {
+    width: 13%;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    #tab-drinks .card:nth-of-type(1) .row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-drinks .card:nth-of-type(1) .row button {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+
+    #tab-drinks .card:nth-of-type(2) .row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(120px, 0.5fr)
+            auto;
+    }
+
+
+    #tab-drinks h2 + .algo + .card .row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    #tab-drinks .card:has(#drinkSearchInput) .row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            auto;
+    }
+
+    #tab-drinks .card:has(#drinkSearchInput)
+    button:last-child {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    #tab-drinks .card:nth-of-type(1) .row,
+    #tab-drinks .card:nth-of-type(2) .row,
+    #tab-drinks .card:nth-of-type(3) .row,
+    #tab-drinks h2 + .algo + .card .row,
+    #tab-drinks .card:has(#drinkSearchInput) .row {
+        grid-template-columns: 1fr;
+    }
+
+
+    #tab-drinks .card:nth-of-type(1) .row button,
+    #tab-drinks .card:nth-of-type(2) .row button,
+    #tab-drinks .card:nth-of-type(3) .row button,
+    #tab-drinks h2 + .algo + .card .row button,
+    #tab-drinks .card:has(#drinkSearchInput) button {
+        width: 100%;
+        grid-column: auto;
+    }
+
+
+    #tab-drinks .card:nth-of-type(3) .buttonRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    #tab-drinks .card:nth-of-type(3) .buttonRow button {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   BILLING
+========================================================= */
+
+#billTarget {
+    width: 100%;
+}
+
+#billPreview {
+    margin: 10px 0;
+}
+
+#receiptActions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+/* =========================================================
+   OTHER
+========================================================= */
+
+hr {
+    margin: 14px 0;
+
+    border: 0;
+    border-top: 1px solid var(--border);
+}
+
+#sidebarOverlay {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(30, 40, 34, 0.20);
+
+    z-index: 29;
+}
+
+#sidebarOverlay.open {
+    display: block;
+}
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 820px) {
+
+    #topbar {
+        display: flex;
+    }
+
+    #sidebar {
+        width: 78vw;
+        max-width: 280px;
+
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+
+    #sidebar.open {
+        transform: translateX(0);
+    }
+
+    #main {
+        width: 100%;
+
+        margin-left: 0;
+        padding: 14px;
+    }
+
+    .section {
+        max-width: 100%;
+    }
+
+    .dashGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .row > * {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .row > button,
+    .buttonRow button {
+        width: 100%;
+    }
+
+    /* Reservation forms become one column */
+    #tab-billiard-reservations .card:first-of-type .row:first-child,
+    #tab-billiard-reservations .card:first-of-type .row:nth-child(2),
+    #tab-ktv-reservations .card:first-of-type .row:first-child,
+    #tab-ktv-reservations .card:first-of-type .row:nth-child(2),
+    .reservationFormGrid {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-billiard-reservations .searchRow,
+    #tab-ktv-reservations .searchRow,
+    #tab-billiard-reservations .reservationSearchRow,
+    #tab-ktv-reservations .reservationSearchRow {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-billiard-reservations .searchRow button,
+    #tab-ktv-reservations .searchRow button,
+    #tab-billiard-reservations .reservationSearchRow button,
+    #tab-ktv-reservations .reservationSearchRow button {
+        width: 100%;
+    }
+
+    #tab-walkin .card .row:first-child,
+    #tab-walkin .card .row:nth-child(2) {
+        grid-template-columns: 1fr;
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+        font-size: 16px;
+    }
+
+    button.small {
+        width: auto;
+
+        padding: 7px 10px;
+
+        font-size: 13px;
+    }
+
+    table {
+        font-size: 11.5px;
+    }
+
+    th,
+    td {
+        padding: 6px;
+        white-space: nowrap;
+    }
+
+    .loginBox,
+    .login-card {
+        width: 88vw;
+        max-width: 340px;
+    }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    body,
+    .card,
+    .dashCard,
+    table,
+    input,
+    select,
+    textarea {
+        background: #ffffff !important;
+        color: #25312b !important;
+    }
+
+    th {
+        background: #f0f3f1 !important;
+        color: #3c4942 !important;
+    }
+
+
+    #sidebar,
+    #topbar,
+    #sidebarOverlay,
+    button {
+        display: none !important;
+    }
+
+    #main {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: #ffffff;
+    }
+}
+
+/* INVENTORY SEARCH - SAME ROW */
+
+.inventoryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    margin: 16px 0 10px;
+}
+
+.inventoryHeader h2 {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.inventoryTools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    flex: 1;
+    max-width: 650px;
+}
+
+.inventoryTools #drinkSearchInput {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    height: 42px;
+}
+
+.inventoryTools button {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 90px;
+    height: 42px;
+    margin: 0;
+}
+
+/* Mobile only: saka lang sila magkakahiwalay */
+@media (max-width: 650px) {
+    .inventoryHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inventoryTools {
+        width: 100%;
+        max-width: none;
+        flex-direction: row;
+    }
+
+    .inventoryTools #drinkSearchInput {
+        flex: 1;
+    }
+
+    .inventoryTools button {
+        width: auto;
+    }
+}
+
+#historyDetail {
+    margin-top: 20px;
+}
+
+#tab-history .sectionTitle {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
