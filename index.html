@@ -42,6 +42,8 @@
 
             <p>Staff Login</p>
 
+            <label for="loginUsername" class="loginLabel">Username</label>
+
             <input
 
                 type="text"
@@ -51,6 +53,8 @@
                 placeholder="Username"
 
             >
+
+            <label for="loginPassword" class="loginLabel">Password</label>
 
             <input
 
@@ -69,16 +73,6 @@
             </button>
 
             <div id="msgLogin"></div>
-
-            <p>
-
-                Default admin:
-
-                <b>admin</b> /
-
-                <b>admin123</b>
-
-            </p>
 
         </div>
 
@@ -1147,53 +1141,9 @@
 
                 </div>
 
-                <div class="card">
+                
 
-                    <h3>Add New Drink</h3>
-
-                    <div class="row">
-
-                        <input type="text" id="newDrinkName" placeholder="Drink Name">
-
-                        <select id="newDrinkCategory"></select>
-
-                        <input type="number" id="newDrinkStock" placeholder="Stock Qty" min="0" value="10">
-
-                        <input type="number" id="newDrinkPrice" placeholder="Selling Price" min="0" value="50">
-
-                        <button onclick="handleAddDrink()">
-
-                            Add Drink
-
-                        </button>
-
-                    </div>
-
-                    <div id="addDrinkMsg" class="msg"></div>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>Restock Drink</h3>
-
-                    <div class="row">
-
-                        <select id="restockDrinkSelect"></select>
-
-                        <input type="number" id="restockQty" placeholder="Additional Qty" min="1" value="10">
-
-                        <button class="secondary" onclick="handleRestock()">
-
-                            Restock
-
-                        </button>
-
-                    </div>
-
-                    <div id="restockMsg" class="msg"></div>
-
-                </div>
+                
 
                 <div class="card">
 
@@ -1218,12 +1168,6 @@
                         <button class="secondary" onclick="handleEditDrink()">
 
                             Save Changes
-
-                        </button>
-
-                        <button class="danger" onclick="handleDeleteDrink()">
-
-                            Delete Drink
 
                         </button>
 
