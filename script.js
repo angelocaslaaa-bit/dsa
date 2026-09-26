@@ -163,7 +163,7 @@ const CATEGORY_NOTES = {
         "Includes 1 Free Snack (Choose 1: Fishball, Crackers, or French Fries)",
 
     "Liquor":
-        "Includes Free 1.5L Coke + 1 Snack Choice (Sisig, Pusit, or Calamares)",
+        "Includes Free 1.5L Coke + 1 Snack Choice (Sisig, Sizzling Squid, or Calamares)",
 
     "Bottled Beer": "",
 
@@ -181,6 +181,30 @@ const DRINK_CATEGORIES = [
     "Other"
 ];
 
+const SNACK_CATALOG = {
+    "Fishball": 45,
+    "Crackers": 45,
+    "French Fries": 45,
+    "Sisig": 130,
+    "Sizzling Squid": 130,
+    "Calamares": 75
+};
+
+const DEFAULT_SNACKS_BY_CATEGORY = {
+    "Buckets": ["Fishball", "Crackers", "French Fries"],
+    "Liquor": ["Sisig", "Sizzling Squid", "Calamares"]
+};
+
+let expenses = [];
+let nextExpenseId = 1;
+
+function categoryHasFreeSnack(category) { return category === "Buckets" || category === "Liquor"; }
+function getDrinkSnackChoices(drink) {
+    if (!drink || !categoryHasFreeSnack(drink.category)) return [];
+    return Array.isArray(drink.freeSnacks) && drink.freeSnacks.length
+        ? drink.freeSnacks
+        : [...(DEFAULT_SNACKS_BY_CATEGORY[drink.category] || [])];
+}
 
 /* ---------- DRINK INVENTORY ---------- */
 
@@ -189,6 +213,7 @@ let drinks = [
     {
         id: "D1",
         category: "Buckets",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Buckets"]],
         name: "SMB Pilsen (Bucket)",
         price: 420,
         stock: 10,
@@ -198,6 +223,7 @@ let drinks = [
     {
         id: "D2",
         category: "Buckets",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Buckets"]],
         name: "SM Light (Bucket)",
         price: 480,
         stock: 10,
@@ -207,6 +233,7 @@ let drinks = [
     {
         id: "D3",
         category: "Buckets",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Buckets"]],
         name: "SM Apple (Bucket)",
         price: 480,
         stock: 10,
@@ -216,6 +243,7 @@ let drinks = [
     {
         id: "D4",
         category: "Buckets",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Buckets"]],
         name: "RH Stallion (Bucket)",
         price: 480,
         stock: 10,
@@ -225,6 +253,7 @@ let drinks = [
     {
         id: "D5",
         category: "Liquor",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Liquor"]],
         name: "Alfonso Light",
         price: 800,
         stock: 8,
@@ -234,6 +263,7 @@ let drinks = [
     {
         id: "D6",
         category: "Liquor",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Liquor"]],
         name: "Escobar Light",
         price: 700,
         stock: 8,
@@ -243,6 +273,7 @@ let drinks = [
     {
         id: "D7",
         category: "Liquor",
+        freeSnacks: [...DEFAULT_SNACKS_BY_CATEGORY["Liquor"]],
         name: "Fundador Light",
         price: 800,
         stock: 8,
@@ -509,6 +540,56 @@ function timeToMinutes(time) {
 
 }
 
+
+
+/* =========================================================
+   BUSINESS HOURS
+   Snooker's Billiard Hall: 2:00 PM to 12:00 AM
+========================================================= */
+
+const OPENING_MINUTES = 14 * 60;
+const CLOSING_MINUTES = 24 * 60;
+
+function validateBusinessHours(startTime, durationMinutes) {
+
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = startMinutes + Number(durationMinutes || 0);
+
+    if (startMinutes < OPENING_MINUTES) {
+        return {
+            valid: false,
+            message: "Reservations and sessions can only start from 2:00 PM onwards."
+        };
+    }
+
+    if (startMinutes >= CLOSING_MINUTES) {
+        return {
+            valid: false,
+            message: "The hall closes at 12:00 AM. A session cannot start at or after closing time."
+        };
+    }
+
+    if (endMinutes > CLOSING_MINUTES) {
+        return {
+            valid: false,
+            message: "This duration goes beyond the 12:00 AM closing time. Please choose a shorter duration."
+        };
+    }
+
+    return { valid: true };
+}
+
+function getTodayClockTime() {
+    const now = new Date();
+    return pad2(now.getHours()) + ":" + pad2(now.getMinutes());
+}
+
+function getSessionClosingTime(session) {
+    const closing = new Date(session.actualStart);
+    closing.setDate(closing.getDate() + 1);
+    closing.setHours(0, 0, 0, 0);
+    return closing;
+}
 
 function overlaps(
     firstStart,
@@ -3564,6 +3645,24 @@ function createReservation(
     }
 
 
+    const businessHoursCheck =
+        validateBusinessHours(
+            startTime,
+            duration
+        );
+
+    if (!businessHoursCheck.valid) {
+
+        showMsg(
+            options.messageId,
+            businessHoursCheck.message,
+            "warn"
+        );
+
+        return;
+    }
+
+
     const endTime =
         computeEndTimeStr(
             date,
@@ -3866,6 +3965,28 @@ function handleStartReservationEarly(
 
     const actualStart =
         new Date();
+
+    const actualStartTime =
+        pad2(actualStart.getHours()) +
+        ":" +
+        pad2(actualStart.getMinutes());
+
+    const reservationStartCheck =
+        validateBusinessHours(
+            actualStartTime,
+            reservation.durationMinutes
+        );
+
+    if (!reservationStartCheck.valid) {
+
+        showMsg(
+            messageId,
+            reservationStartCheck.message,
+            "warn"
+        );
+
+        return;
+    }
 
 
     sessions[
@@ -4502,6 +4623,23 @@ function handleAddWalkIn() {
         return;
     }
 
+    const walkInHoursCheck =
+        validateBusinessHours(
+            getTodayClockTime(),
+            duration
+        );
+
+    if (!walkInHoursCheck.valid) {
+
+        showMsg(
+            "wiMsg",
+            walkInHoursCheck.message,
+            "warn"
+        );
+
+        return;
+    }
+
     const walkIn = {
 
         id:
@@ -4572,6 +4710,23 @@ function handleStartWalkIn(
         !walkIn ||
         walkIn.status !== "Waiting"
     ) {
+        return;
+    }
+
+    const walkInStartCheck =
+        validateBusinessHours(
+            getTodayClockTime(),
+            walkIn.durationMinutes
+        );
+
+    if (!walkInStartCheck.valid) {
+
+        showMsg(
+            "wiMsg",
+            walkInStartCheck.message,
+            "warn"
+        );
+
         return;
     }
 
@@ -4940,6 +5095,18 @@ function handleExtendSession(
 
         );
 
+    const closingTime =
+        getSessionClosingTime(session);
+
+    if (newEnd > closingTime) {
+
+        alert(
+            "Cannot extend this session. Snooker's Billiard Hall closes at 12:00 AM."
+        );
+
+        return;
+    }
+
     const conflict =
         reservations.find(
             reservation => {
@@ -5057,6 +5224,8 @@ function handleEndSession(
 
     populateAllSelects();
 
+    resetBillingFormState();
+
     showTab(
         "billing"
     );
@@ -5086,6 +5255,8 @@ function handleEndSession(
 function openSessionBilling(
     facilityId
 ) {
+
+    resetBillingFormState();
 
     showTab(
         "billing"
@@ -5196,6 +5367,67 @@ function populateCategorySelects() {
 }
 
 
+function populateSnackSelect(selectId, category, selected = []) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select free snack";
+    select.appendChild(placeholder);
+
+    const choices = DEFAULT_SNACKS_BY_CATEGORY[category] || [];
+    const selectedValue = Array.isArray(selected) && selected.length ? selected[0] : "";
+
+    choices.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        option.selected = name === selectedValue;
+        select.appendChild(option);
+    });
+}
+
+function toggleSnackConfig(mode) {
+    const categoryEl = document.getElementById(mode === "new" ? "newDrinkCategory" : "editDrinkCategory");
+    const group = document.getElementById(mode === "new" ? "newSnackGroup" : "editSnackGroup");
+    const selectId = mode === "new" ? "newDrinkSnacks" : "editDrinkSnacks";
+    if (!categoryEl || !group) return;
+    const show = categoryHasFreeSnack(categoryEl.value);
+    group.style.display = show ? "block" : "none";
+    if (show) {
+        let selected = [];
+        if (mode === "edit") {
+            const drink = drinks.find(d => d.id === document.getElementById("editDrinkSelect")?.value);
+            selected = getDrinkSnackChoices(drink);
+        } else selected = [];
+        populateSnackSelect(selectId, categoryEl.value, selected);
+    }
+}
+
+function selectedSnackValues(selectId) {
+    const el = document.getElementById(selectId);
+    if (!el || !el.value) return [];
+    return [el.value];
+}
+
+function updateOrderSnackChoices() {
+    const drink = drinks.find(d => d.id === document.getElementById("drinkSelect")?.value);
+    const group = document.getElementById("orderSnackGroup");
+    const select = document.getElementById("orderSnackSelect");
+    if (!group || !select) return;
+    const choices = getDrinkSnackChoices(drink);
+    group.style.display = choices.length ? "block" : "none";
+    select.innerHTML = "";
+    choices.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = `Free Snack: ${name}`;
+        select.appendChild(option);
+    });
+}
+
 /* =========================================================
    ADD NEW DRINK
 ========================================================= */
@@ -5269,6 +5501,11 @@ async function handleAddDrink() {
         return;
     }
 
+    if (categoryHasFreeSnack(category) && selectedSnackValues("newDrinkSnacks").length === 0) {
+        showMsg("addDrinkMsg", "Select a free snack for this drink.", "warn");
+        return;
+    }
+
     const confirmed =
         await showActionConfirmation(
             "Add Drink?",
@@ -5288,6 +5525,8 @@ async function handleAddDrink() {
 
         category:
             category,
+
+        freeSnacks: categoryHasFreeSnack(category) ? selectedSnackValues("newDrinkSnacks") : [],
 
         name:
             name,
@@ -5493,6 +5732,8 @@ function loadDrinkForEdit() {
             drink.stock;
     }
 
+    toggleSnackConfig("edit");
+
 }
 
 
@@ -5588,6 +5829,11 @@ async function handleEditDrink() {
         return;
     }
 
+    if (categoryHasFreeSnack(category) && selectedSnackValues("editDrinkSnacks").length === 0) {
+        showMsg("editDrinkMsg", "Select a free snack for this drink.", "warn");
+        return;
+    }
+
     const confirmed =
         await showActionConfirmation(
             "Save Changes?",
@@ -5605,6 +5851,8 @@ async function handleEditDrink() {
 
     drink.category =
         category;
+
+    drink.freeSnacks = categoryHasFreeSnack(category) ? selectedSnackValues("editDrinkSnacks") : [];
 
     drink.price =
         price;
@@ -5798,6 +6046,7 @@ function populateDrinkSelect() {
     );
 
     loadDrinkForEdit();
+    updateOrderSnackChoices();
 
 }
 
@@ -5991,6 +6240,15 @@ async function handleDrinkOrder() {
         return;
     }
 
+    const snackName = categoryHasFreeSnack(drink.category)
+        ? document.getElementById("orderSnackSelect")?.value
+        : "";
+
+    if (categoryHasFreeSnack(drink.category) && !snackName) {
+        showMsg("drinkOrderMsg", "Select the free snack before placing this order.", "warn");
+        return;
+    }
+
     const confirmed =
         await showActionConfirmation(
             "Confirm Order",
@@ -6022,8 +6280,9 @@ async function handleDrinkOrder() {
             quantity,
 
         price:
-            drink.price
+            drink.price,
 
+        freeSnack: snackName || null
     };
 
 
@@ -6189,6 +6448,21 @@ async function handleDrinkOrder() {
         return;
     }
 
+
+    if (snackName) {
+        expenses.push({
+            id: `EXP${String(nextExpenseId++).padStart(3, "0")}`,
+            createdAt: new Date(),
+            source: drink.name,
+            snack: snackName,
+            qty: quantity,
+            unitCost: Number(SNACK_CATALOG[snackName] || 0),
+            total: Number(SNACK_CATALOG[snackName] || 0) * quantity,
+            status: "Unpaid",
+            paidAt: null
+        });
+        renderExpenses();
+    }
 
     quantityInput.value =
         "1";
@@ -7001,14 +7275,7 @@ function renderBillPreview() {
 
                 </table>
 
-                <div
-                    style="
-                        margin-top:14px;
-                        font-size:16px;
-                        font-weight:bold;
-                    "
-                >
-
+                <div class="billingGrandTotal">
                     Grand Total:
                     \u20B1${grandTotal}
 
@@ -7147,14 +7414,7 @@ function renderBillPreview() {
 
                 </table>
 
-                <div
-                    style="
-                        margin-top:14px;
-                        font-size:16px;
-                        font-weight:bold;
-                    "
-                >
-
+                <div class="billingGrandTotal">
                     Grand Total:
                     \u20B1${total}
 
@@ -7413,6 +7673,21 @@ function getCurrentBillData() {
    COMPLETE PAYMENT
 ========================================================= */
 
+
+function resetBillingFormState() {
+    const amountPaidInput = document.getElementById("amountPaid");
+    const paymentMethodInput = document.getElementById("paymentMethod");
+    const billMsg = document.getElementById("billMsg");
+    const receiptActions = document.getElementById("receiptActions");
+
+    if (amountPaidInput) amountPaidInput.value = "";
+    if (paymentMethodInput) paymentMethodInput.value = "Cash";
+    if (billMsg) {
+        billMsg.className = "msg";
+        billMsg.innerHTML = "";
+    }
+    if (receiptActions) receiptActions.innerHTML = "";
+}
 
 function showPaymentChange(transaction) {
     const billMsg = document.getElementById("billMsg");
@@ -8759,6 +9034,125 @@ function exportInventoryReportPDF() {
 }
 
 
+function getSnackCategoryLabel(name) {
+    const inBuckets = DEFAULT_SNACKS_BY_CATEGORY.Buckets.includes(name);
+    const inLiquor = DEFAULT_SNACKS_BY_CATEGORY.Liquor.includes(name);
+    if (inBuckets && inLiquor) return "Both";
+    if (inLiquor) return "Liquor";
+    return "Buckets";
+}
+
+function setSnackCategory(name, category) {
+    ["Buckets", "Liquor"].forEach(cat => {
+        DEFAULT_SNACKS_BY_CATEGORY[cat] = DEFAULT_SNACKS_BY_CATEGORY[cat].filter(item => item !== name);
+    });
+    if (category === "Buckets" || category === "Both") DEFAULT_SNACKS_BY_CATEGORY.Buckets.push(name);
+    if (category === "Liquor" || category === "Both") DEFAULT_SNACKS_BY_CATEGORY.Liquor.push(name);
+}
+
+function refreshSnackDependentUI() {
+    drinks.forEach(drink => {
+        if (!categoryHasFreeSnack(drink.category)) return;
+        const allowed = new Set(DEFAULT_SNACKS_BY_CATEGORY[drink.category] || []);
+        if (!Array.isArray(drink.freeSnacks)) drink.freeSnacks = [];
+        drink.freeSnacks = drink.freeSnacks.filter(name => SNACK_CATALOG[name] !== undefined && allowed.has(name));
+        if (!drink.freeSnacks.length) drink.freeSnacks = [...allowed];
+    });
+    toggleSnackConfig("new");
+    if (document.getElementById("editDrinkSelect")?.value) toggleSnackConfig("edit");
+    updateOrderSnackChoices();
+}
+
+function renderSnackCostSetup() {
+    const box = document.getElementById("snackCostSetup");
+    if (!box) return;
+    box.innerHTML = "";
+    const names = Object.keys(SNACK_CATALOG);
+    if (!names.length) { box.innerHTML = `<div class="emptyState">No snacks configured yet.</div>`; return; }
+    names.forEach(name => {
+        const item = document.createElement("div");
+        item.className = "snackCostItem";
+        const safeName = name.replace(/'/g, "\\'");
+        item.innerHTML = `<div class="snackSetupInfo"><strong>${name}</strong><span>${getSnackCategoryLabel(name)} • ₱${Number(SNACK_CATALOG[name]).toFixed(2)}</span></div><div class="snackSetupActions"><button class="secondary small" onclick="handleEditSnack('${safeName}')">Edit</button><button class="danger small" onclick="handleDeleteSnack('${safeName}')">Delete</button></div>`;
+        box.appendChild(item);
+    });
+}
+
+function handleAddSnack() {
+    const nameEl=document.getElementById("newSnackName"), categoryEl=document.getElementById("newSnackCategory"), costEl=document.getElementById("newSnackCost");
+    const name=(nameEl?.value||"").trim(), category=categoryEl?.value||"Buckets", cost=Number(costEl?.value);
+    if(!name){showMsg("snackSetupMsg","Enter the snack name.","warn");return;}
+    if(Object.keys(SNACK_CATALOG).some(x=>x.toLowerCase()===name.toLowerCase())){showMsg("snackSetupMsg","That snack already exists.","warn");return;}
+    if(!Number.isFinite(cost)||cost<0){showMsg("snackSetupMsg","Enter a valid snack cost.","warn");return;}
+    SNACK_CATALOG[name]=cost; setSnackCategory(name,category); nameEl.value=""; costEl.value="";
+    renderSnackCostSetup(); refreshSnackDependentUI(); showMsg("snackSetupMsg",`${name} added successfully.`,"ok");
+}
+
+function handleEditSnack(oldName) {
+    if(SNACK_CATALOG[oldName]===undefined)return;
+    const currentCategory=getSnackCategoryLabel(oldName);
+    const newName=(prompt("Snack name:",oldName)||"").trim(); if(!newName)return;
+    if(Object.keys(SNACK_CATALOG).some(n=>n!==oldName&&n.toLowerCase()===newName.toLowerCase())){showMsg("snackSetupMsg","Another snack already uses that name.","warn");return;}
+    const costInput=prompt("Snack cost:",String(SNACK_CATALOG[oldName])); if(costInput===null)return;
+    const newCost=Number(costInput); if(!Number.isFinite(newCost)||newCost<0){showMsg("snackSetupMsg","Enter a valid snack cost.","warn");return;}
+    const categoryInput=(prompt("Category: Buckets, Liquor, or Both",currentCategory)||"").trim().toLowerCase();
+    const map={buckets:"Buckets",liquor:"Liquor",both:"Both","buckets & liquor":"Both"}; const newCategory=map[categoryInput];
+    if(!newCategory){showMsg("snackSetupMsg","Category must be Buckets, Liquor, or Both.","warn");return;}
+    if(newName!==oldName){
+        delete SNACK_CATALOG[oldName]; SNACK_CATALOG[newName]=newCost;
+        ["Buckets","Liquor"].forEach(cat=>DEFAULT_SNACKS_BY_CATEGORY[cat]=DEFAULT_SNACKS_BY_CATEGORY[cat].map(n=>n===oldName?newName:n));
+        drinks.forEach(d=>{if(Array.isArray(d.freeSnacks))d.freeSnacks=d.freeSnacks.map(n=>n===oldName?newName:n);});
+    } else SNACK_CATALOG[oldName]=newCost;
+    setSnackCategory(newName,newCategory); renderSnackCostSetup(); refreshSnackDependentUI(); showMsg("snackSetupMsg",`${newName} updated successfully.`,"ok");
+}
+
+async function handleDeleteSnack(name) {
+    if(SNACK_CATALOG[name]===undefined)return;
+    const ok=await showActionConfirmation("Delete Snack?",`Delete ${name} from the snack setup and future drink choices? Existing expense records will stay unchanged.`,"Delete"); if(!ok)return;
+    delete SNACK_CATALOG[name];
+    ["Buckets","Liquor"].forEach(cat=>DEFAULT_SNACKS_BY_CATEGORY[cat]=DEFAULT_SNACKS_BY_CATEGORY[cat].filter(n=>n!==name));
+    drinks.forEach(d=>{if(Array.isArray(d.freeSnacks))d.freeSnacks=d.freeSnacks.filter(n=>n!==name);});
+    renderSnackCostSetup(); refreshSnackDependentUI(); showMsg("snackSetupMsg",`${name} deleted. Existing expense records were kept.`,"ok");
+}
+
+function renderExpenses() {
+    const tbody = document.getElementById("expensesBody");
+    if (!tbody) return;
+    const status = document.getElementById("expenseStatusFilter")?.value || "All";
+    const from = document.getElementById("expenseFrom")?.value || "";
+    const to = document.getElementById("expenseTo")?.value || "";
+    let list = expenses.filter(e => {
+        const d = new Date(e.createdAt);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+        return (status === "All" || e.status === status) && (!from || key >= from) && (!to || key <= to);
+    });
+    tbody.innerHTML = "";
+    if (!list.length) tbody.innerHTML = `<tr><td colspan="9" class="emptyState">No expense records found.</td></tr>`;
+    list.slice().reverse().forEach(e => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${e.id}</td><td>${fmtDateTime(e.createdAt)}</td><td>${e.source}</td><td>${e.snack}</td><td>${e.qty}</td><td>₱${Number(e.unitCost).toFixed(2)}</td><td>₱${Number(e.total).toFixed(2)}</td><td><span class="badge ${e.status === "Paid" ? "free" : "low"}">${e.status}</span></td><td>${e.status === "Unpaid" ? `<button class="small" onclick="markExpensePaid('${e.id}')">Mark Paid</button>` : `Paid ${e.paidAt ? fmtDateTime(e.paidAt) : ""}`}</td>`;
+        tbody.appendChild(row);
+    });
+    const now = new Date();
+    const todayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+    const startWeek = new Date(now); startWeek.setHours(0,0,0,0); startWeek.setDate(now.getDate() - now.getDay());
+    const todayTotal = expenses.filter(e => { const d=new Date(e.createdAt); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`===todayKey; }).reduce((a,e)=>a+Number(e.total||0),0);
+    const weekTotal = expenses.filter(e => new Date(e.createdAt) >= startWeek).reduce((a,e)=>a+Number(e.total||0),0);
+    const unpaid = expenses.filter(e=>e.status==="Unpaid").reduce((a,e)=>a+Number(e.total||0),0);
+    if(document.getElementById("expenseToday")) document.getElementById("expenseToday").textContent=`₱${todayTotal.toFixed(2)}`;
+    if(document.getElementById("expenseWeek")) document.getElementById("expenseWeek").textContent=`₱${weekTotal.toFixed(2)}`;
+    if(document.getElementById("expenseUnpaid")) document.getElementById("expenseUnpaid").textContent=`₱${unpaid.toFixed(2)}`;
+}
+
+async function markExpensePaid(id) {
+    const expense = expenses.find(e=>e.id===id);
+    if(!expense) return;
+    const ok = await showActionConfirmation("Mark Expense Paid?", `Confirm payment of ₱${Number(expense.total).toFixed(2)} to the tapsilugan for ${expense.snack}.`, "Mark Paid");
+    if(!ok) return;
+    expense.status="Paid"; expense.paidAt=new Date();
+    renderExpenses(); renderSalesReport();
+}
+
 /* =========================================================
    SALES REPORT PDF
 ========================================================= */
@@ -8834,6 +9228,12 @@ function renderSalesReport() {
     for (let i = 0; i < list.length; i++) {
         totalSales += Number(list[i].grandTotal || 0);
     }
+
+    const paidExpenses = expenses.filter(e => e.status === "Paid").reduce((sum, e) => sum + Number(e.total || 0), 0);
+    const netSales = totalSales - paidExpenses;
+    if (document.getElementById("salesSummaryTotal")) document.getElementById("salesSummaryTotal").textContent = `₱${totalSales.toFixed(2)}`;
+    if (document.getElementById("salesSummaryExpenses")) document.getElementById("salesSummaryExpenses").textContent = `₱${paidExpenses.toFixed(2)}`;
+    if (document.getElementById("salesSummaryNet")) document.getElementById("salesSummaryNet").textContent = `₱${netSales.toFixed(2)}`;
 
     const totalRow = document.createElement("tr");
     totalRow.className = "salesTotalRow";
@@ -9424,6 +9824,7 @@ function setupBillingListener() {
         "change",
         () => {
 
+            resetBillingFormState();
             renderBillPreview();
 
             showMsg(
@@ -9590,6 +9991,9 @@ document.addEventListener(
         ----------------------------------------- */
 
         populateCategorySelects();
+        toggleSnackConfig("new");
+        renderSnackCostSetup();
+        renderExpenses();
 
         populateDrinkSelect();
 
@@ -9628,6 +10032,8 @@ document.addEventListener(
         renderInventory();
 
         renderHistory();
+        renderSalesReport();
+        renderExpenses();
 
         renderStaff();
 
