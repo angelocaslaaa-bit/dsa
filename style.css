@@ -2249,3 +2249,19 @@ input[type="number"]::-webkit-outer-spin-button {
     min-width: 0;
     margin: 0;
 }
+
+
+/* =========================================================
+   v8 — COMBINED RESTOCK / EDIT DRINK
+========================================================= */
+#tab-drinks .editDrinkGrid {
+    margin-bottom: 10px;
+}
+
+#tab-drinks .editDrinkGrid #editDrinkStock {
+    width: 100%;
+}
+
+#tab-drinks .buttonRow {
+    align-items: center;
+}
