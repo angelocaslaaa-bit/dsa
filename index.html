@@ -1134,25 +1134,7 @@
 
                 <div class="card">
 
-                    <h3>Restock Drink</h3>
-
-                    <div class="row restockDrinkGrid">
-        <div class="fieldGroup">
-            <select id="restockDrinkSelect"></select>
-        </div>
-        <div class="fieldGroup">
-            <input type="number" id="restockQty" aria-label="Restock quantity" placeholder="Enter quantity" min="1">
-        </div>
-        <button class="secondary" onclick="handleRestock()">Restock</button>
-    </div>
-
-                    <div id="restockMsg" class="msg"></div>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>Edit Drink</h3>
+                    <h3>Restock / Edit Drink</h3>
 
                     <div class="row editDrinkGrid">
 
@@ -1173,7 +1155,7 @@
                         </div>
 
                         <div class="fieldGroup">
-                            <input type="number" id="editDrinkStock" aria-label="Stock quantity" placeholder="Enter stock quantity" min="0">
+                            <input type="number" id="editDrinkStock" aria-label="Stock quantity" placeholder="Enter new stock quantity" min="0">
                         </div>
                         <div class="fieldGroup snackConditional" id="editSnackGroup" style="display:none;">
                             <select id="editDrinkSnacks" aria-label="Free Snack Choice"></select>
