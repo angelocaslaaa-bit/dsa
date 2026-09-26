@@ -3776,6 +3776,10 @@ function createReservation(
 
     populateAllSelects();
 
+    clearFormMessage(
+        options.messageId
+    );
+
 }
 
 
@@ -9837,6 +9841,89 @@ function setupHistorySearch() {
 }
 
 
+
+/* =========================================================
+   CLEAR FORM NOTIFICATIONS WHEN USER EDITS INPUTS
+========================================================= */
+
+function clearFormMessage(messageId) {
+
+    const message =
+        document.getElementById(messageId);
+
+    if (!message) {
+        return;
+    }
+
+    message.textContent = "";
+    message.className = "msg";
+
+}
+
+function setupFormMessageReset() {
+
+    const groups = [
+        {
+            messageId: "bResMsg",
+            fieldIds: [
+                "bResCustomer",
+                "bResContact",
+                "bResFacilitySelect",
+                "bResDate",
+                "bResStartTime",
+                "bResDurationSelect"
+            ]
+        },
+        {
+            messageId: "kResMsg",
+            fieldIds: [
+                "kResCustomer",
+                "kResContact",
+                "kResFacilitySelect",
+                "kResDate",
+                "kResStartTime",
+                "kResDurationSelect"
+            ]
+        },
+        {
+            messageId: "wiMsg",
+            fieldIds: [
+                "wiCustomer",
+                "wiFacilityType",
+                "wiDurationSelect"
+            ]
+        }
+    ];
+
+    groups.forEach(group => {
+
+        group.fieldIds.forEach(fieldId => {
+
+            const field =
+                document.getElementById(fieldId);
+
+            if (!field) {
+                return;
+            }
+
+            const eventName =
+                field.tagName === "SELECT" ||
+                field.type === "date" ||
+                field.type === "time"
+                    ? "change"
+                    : "input";
+
+            field.addEventListener(
+                eventName,
+                () => clearFormMessage(group.messageId)
+            );
+
+        });
+
+    });
+
+}
+
 /* =========================================================
    MOBILE WINDOW HANDLING
 ========================================================= */
@@ -9922,6 +10009,8 @@ document.addEventListener(
         setupLoginEnterKey();
 
         setupReservationPriceListeners();
+
+        setupFormMessageReset();
 
         setupBillingListener();
 
