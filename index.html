@@ -22,6 +22,14 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <script
+
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+
+        defer
+
+    ></script>
+
     <script src="script.js" defer></script>
 
 </head>
@@ -38,38 +46,39 @@
 
         <div class="loginBox">
 
-            <h1>Billiard & KTV Store</h1>
+            <div class="loginBrand">Snooker's Billiard Hall</div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to continue to the management system.</p>
 
-            <p>Staff Login</p>
-
-            <label for="loginUsername" class="loginLabel">Username</label>
-
+            <label class="loginLabel" for="loginUsername">Username</label>
             <input
-
                 type="text"
-
                 id="loginUsername"
-
-                placeholder="Username"
-
+                placeholder="Enter your username"
+                autocomplete="username"
             >
 
-            <label for="loginPassword" class="loginLabel">Password</label>
-
+            <label class="loginLabel" for="loginPassword">Password</label>
             <input
-
                 type="password"
-
                 id="loginPassword"
-
-                placeholder="Password"
-
+                placeholder="Enter your password"
+                autocomplete="current-password"
             >
 
             <button onclick="handleLogin()">
-
                 Login
+            </button>
 
+            <div class="loginDivider">
+                <span>or</span>
+            </div>
+
+            <button
+                class="secondary"
+                onclick="openSignUpModal()"
+            >
+                Create an Account
             </button>
 
             <div id="msgLogin"></div>
@@ -151,111 +160,58 @@
 
 
             <button
-
                 data-tab="dashboard"
-
                 onclick="showTab('dashboard')"
-
             >
-
-                Home
-
+                Live Timer
             </button>
 
-
-
-
+            <div class="sidebarLabel">RESERVATIONS</div>
 
             <button
-
                 data-tab="billiard-reservations"
-
                 onclick="showTab('billiard-reservations')"
-
             >
-
                 Billiard Reservation
-
             </button>
 
-
-
-
-
             <button
-
                 data-tab="ktv-reservations"
-
                 onclick="showTab('ktv-reservations')"
-
             >
-
                 KTV Reservation
-
             </button>
 
-
-
-
-
             <button
-
                 data-tab="walkin"
-
                 onclick="showTab('walkin')"
-
             >
-
                 Walk-In
-
             </button>
 
-
-
-
+            <div class="sidebarLabel">OPERATIONS</div>
 
             <button
-
                 data-tab="drinks"
-
                 onclick="showTab('drinks')"
-
             >
-
                 Drinks & Inventory
-
             </button>
 
-
-
-
-
             <button
-
                 data-tab="billing"
-
                 onclick="showTab('billing')"
-
             >
-
                 Billing
-
             </button>
 
-
-
-
+            <div class="sidebarLabel">RECORDS</div>
 
             <button
-
                 data-tab="history"
-
                 onclick="showTab('history')"
-
             >
-
                 Transaction History
-
             </button>
 
             <button
@@ -265,40 +221,22 @@
                 Sales Report
             </button>
 
-
-
-
+            <div class="sidebarLabel adminOnly">ADMINISTRATION</div>
 
             <button
-
                 data-tab="staff"
-
                 class="adminOnly"
-
                 onclick="showTab('staff')"
-
             >
-
                 Staff Accounts (Admin)
-
             </button>
-
-
-
-
 
             <button
-
                 class="secondary"
-
                 onclick="handleLogout()"
-
             >
-
                 Logout
-
             </button>
-
         </div>
 
 
@@ -331,7 +269,7 @@
 
             >
 
-                <h2>Home</h2>
+                <h2>Live Timer</h2>
 
                 <div class="algo">
 
@@ -1108,20 +1046,17 @@
                 <div class="card">
 
                     <div class="row">
-
-                        <select id="drinkOrderTarget"></select>
-
-                        <select id="drinkSelect"></select>
-
-                        <input type="number" id="drinkQty" placeholder="Qty" min="1" value="1">
-
-                        <button onclick="handleDrinkOrder()">
-
-                            Place Order
-
-                        </button>
-
-                    </div>
+        <div class="fieldGroup">
+            <select id="drinkOrderTarget"></select>
+        </div>
+        <div class="fieldGroup">
+            <select id="drinkSelect"></select>
+        </div>
+        <div class="fieldGroup">
+            <input type="number" id="drinkQty" placeholder="Enter quantity" min="1">
+        </div>
+        <button onclick="handleDrinkOrder()">Place Order</button>
+    </div>
 
                     <div id="drinkOrderMsg" class="msg"></div>
 
@@ -1141,9 +1076,57 @@
 
                 </div>
 
-                
+                <div class="card">
 
-                
+                    <h3>Add New Drink</h3>
+
+                    <div class="row">
+
+                        <div class="fieldGroup">
+                            <input type="text" id="newDrinkName" placeholder="Enter drink name">
+                        </div>
+
+                        <div class="fieldGroup">
+                            <select id="newDrinkCategory"></select>
+                        </div>
+
+                        <div class="fieldGroup">
+                            <input type="number" id="newDrinkStock" placeholder="Enter stock quantity" min="0">
+                        </div>
+
+                        <div class="fieldGroup">
+                            <input type="number" id="newDrinkPrice" placeholder="Enter selling price" min="0">
+                        </div>
+
+                        <button onclick="handleAddDrink()">
+
+                            Add Drink
+
+                        </button>
+
+                    </div>
+
+                    <div id="addDrinkMsg" class="msg"></div>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Restock Drink</h3>
+
+                    <div class="row">
+        <div class="fieldGroup">
+            <select id="restockDrinkSelect"></select>
+        </div>
+        <div class="fieldGroup">
+            <input type="number" id="restockQty" placeholder="Enter quantity" min="1">
+        </div>
+        <button class="secondary" onclick="handleRestock()">Restock</button>
+    </div>
+
+                    <div id="restockMsg" class="msg"></div>
+
+                </div>
 
                 <div class="card">
 
@@ -1151,15 +1134,25 @@
 
                     <div class="row">
 
-                        <select id="editDrinkSelect" onchange="loadDrinkForEdit()"></select>
+                        <div class="fieldGroup">
+                            <select id="editDrinkSelect" onchange="loadDrinkForEdit()"></select>
+                        </div>
 
-                        <input type="text" id="editDrinkName" placeholder="Name">
+                        <div class="fieldGroup">
+                            <input type="text" id="editDrinkName" placeholder="Enter drink name">
+                        </div>
 
-                        <select id="editDrinkCategory"></select>
+                        <div class="fieldGroup">
+                            <select id="editDrinkCategory"></select>
+                        </div>
 
-                        <input type="number" id="editDrinkPrice" placeholder="Price" min="0">
+                        <div class="fieldGroup">
+                            <input type="number" id="editDrinkPrice" placeholder="Enter selling price" min="0">
+                        </div>
 
-                        <input type="number" id="editDrinkStock" placeholder="Stock" min="0">
+                        <div class="fieldGroup">
+                            <input type="number" id="editDrinkStock" placeholder="Enter stock quantity" min="0">
+                        </div>
 
                     </div>
 
@@ -1168,6 +1161,12 @@
                         <button class="secondary" onclick="handleEditDrink()">
 
                             Save Changes
+
+                        </button>
+
+                        <button class="danger" onclick="handleDeleteDrink()">
+
+                            Delete Drink
 
                         </button>
 
@@ -1487,26 +1486,51 @@
                 </div>
 
                 <div class="card">
-                    <div class="row">
-                        <input
-                            type="text"
-                            id="salesReportSearchInput"
-                            placeholder="Search by transaction ID, customer, facility, type, or payment method"
-                            oninput="renderSalesReport()"
-                            onkeyup="if(event.key==='Enter') renderSalesReport()"
-                        >
+                    <div class="salesReportControls">
+                        <div class="salesSearchGroup">
+                            <input
+                                type="text"
+                                id="salesReportSearchInput"
+                                placeholder="Search by transaction ID, customer, facility, type, or payment method"
+                                oninput="renderSalesReport()"
+                                onkeyup="if(event.key==='Enter') renderSalesReport()"
+                            >
 
-                        <button
-                            class="secondary"
-                            onclick="renderSalesReport()"
-                        >
-                            Search
-                        </button>
+                            <button
+                                class="secondary"
+                                onclick="renderSalesReport()"
+                            >
+                                Search
+                            </button>
+                        </div>
 
-                        <button onclick="exportSalesReportPDF()">
-                            Export PDF
-                        </button>
+                        <div class="salesExportGroup">
+                            <label>
+                                From
+                                <input
+                                    type="date"
+                                    id="salesExportFrom"
+                                >
+                            </label>
+
+                            <label>
+                                To
+                                <input
+                                    type="date"
+                                    id="salesExportTo"
+                                >
+                            </label>
+
+                            <button onclick="exportSalesReportPDF()">
+                                Export PDF
+                            </button>
+                        </div>
                     </div>
+
+                    <div
+                        id="salesExportMsg"
+                        class="msg"
+                    ></div>
                 </div>
 
                 <div class="tableWrap">
@@ -1525,8 +1549,6 @@
                         <tbody id="salesReportBody"></tbody>
                     </table>
                 </div>
-
-                <div id="salesReportSummary" class="msg"></div>
             </div>
 
 
@@ -1543,117 +1565,39 @@
             ================================================== -->
 
             <div
-
                 class="section"
-
                 id="tab-staff"
-
             >
 
                 <h2>Staff Account Management</h2>
 
                 <div class="algo">
-
-                    Manage staff accounts and access.
-
+                    Manage staff sign-up requests and approved accounts.
                 </div>
 
-
-
-
-
-                <div class="card">
-
-                    <div class="row">
-
-                        <input
-
-                            type="text"
-
-                            id="newStaffName"
-
-                            placeholder="Full Name"
-
-                        >
-
-                        <input
-
-                            type="text"
-
-                            id="newStaffUsername"
-
-                            placeholder="Username"
-
-                        >
-
-                        <input
-
-                            type="password"
-
-                            id="newStaffPassword"
-
-                            placeholder="Password"
-
-                        >
-
-                        <button onclick="handleCreateStaff()">
-
-                            Create Staff Account
-
-                        </button>
-
-                    </div>
-
-
-
-
-
-                    <div
-
-                        id="staffMsg"
-
-                        class="msg"
-
-                    ></div>
-
-                </div>
-
-
-
-
+                <div
+                    id="staffMsg"
+                    class="msg"
+                ></div>
 
                 <div class="tableWrap">
-
                     <table>
-
                         <thead>
-
                             <tr>
-
                                 <th>ID</th>
-
                                 <th>Username</th>
-
                                 <th>Name</th>
-
+                                <th>Email</th>
                                 <th>Role</th>
-
+                                <th>Status</th>
                                 <th>Action</th>
-
                             </tr>
-
                         </thead>
-
                         <tbody id="staffBody"></tbody>
-
                     </table>
-
                 </div>
 
             </div>
-
-
-
 
 
         </div>
@@ -1672,6 +1616,151 @@
 
 
 
+
+
+
+    <!-- STAFF SIGN UP -->
+    <div id="signUpOverlay" class="securityOverlay" style="display:none;">
+        <div class="securityModal signUpModal">
+
+            <div class="signUpHeader">
+                <div class="signUpBrand">Snooker's Billiard Hall</div>
+                <h2>Create an Account</h2>
+                <p>
+                    Register as a staff member. Your account will be available
+                    after administrator approval.
+                </p>
+            </div>
+
+            <div class="signUpField">
+                <label for="signUpName">Full Name</label>
+                <input
+                    type="text"
+                    id="signUpName"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                >
+            </div>
+
+            <div class="signUpField">
+                <label for="signUpEmail">Gmail Address</label>
+                <input
+                    type="email"
+                    id="signUpEmail"
+                    placeholder="example@gmail.com"
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="signUpField">
+                <label for="signUpUsername">Username</label>
+                <input
+                    type="text"
+                    id="signUpUsername"
+                    placeholder="Create a username"
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="signUpField">
+                <label for="signUpPassword">Password</label>
+                <input
+                    type="password"
+                    id="signUpPassword"
+                    placeholder="Minimum of 8 characters"
+                    autocomplete="new-password"
+                >
+            </div>
+
+            <div class="signUpField">
+                <label for="signUpConfirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    id="signUpConfirmPassword"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password"
+                >
+            </div>
+
+            <div id="signUpMsg" class="msg"></div>
+
+            <div class="signUpActions">
+                <button
+                    class="secondary"
+                    type="button"
+                    onclick="closeSignUpModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    onclick="handleSignUp()"
+                >
+                    Create Account
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ADMIN TEMPORARY PASSWORD POPUP -->
+    <div id="temporaryPasswordOverlay" class="securityOverlay" style="display:none;">
+        <div class="temporaryPasswordModal">
+            <h2>Password Reset Successful</h2>
+            <p>
+                Give this temporary password privately to the staff member.
+                The old password is never displayed.
+            </p>
+
+            <div class="temporaryPasswordLabel">TEMPORARY PASSWORD</div>
+            <div id="temporaryPasswordValue" class="temporaryPasswordValue"></div>
+
+            <p class="temporaryPasswordNote">
+                The staff member will be required to create a new private password after logging in.
+            </p>
+
+            <button type="button" onclick="closeTemporaryPasswordPopup()">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <!-- FORCE PASSWORD CHANGE -->
+    <div id="forcePasswordOverlay" class="securityOverlay" style="display:none;">
+        <div class="securityModal">
+            <h2>Create Your Private Password</h2>
+            <p>
+                You signed in using a temporary password.
+                Create a new password that only you know.
+            </p>
+
+            <input
+                type="password"
+                id="forcedNewPassword"
+                placeholder="New Password"
+                autocomplete="new-password"
+            >
+
+            <input
+                type="password"
+                id="forcedConfirmPassword"
+                placeholder="Confirm New Password"
+                autocomplete="new-password"
+            >
+
+            <button onclick="handleForcedPasswordChange()">
+                Change Password
+            </button>
+
+            <div id="forcePasswordMsg" class="msg"></div>
+        </div>
+    </div>
+
+    <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
 </body>
 
 </html>
