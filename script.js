@@ -5580,92 +5580,6 @@ async function handleAddDrink() {
 
 
 /* =========================================================
-   RESTOCK DRINK
-========================================================= */
-
-async function handleRestock() {
-
-    const select =
-        document.getElementById(
-            "restockDrinkSelect"
-        );
-
-    const quantityInput =
-        document.getElementById(
-            "restockQty"
-        );
-
-    if (
-        !select ||
-        !quantityInput
-    ) {
-        return;
-    }
-
-    const drink =
-        drinks.find(
-            item =>
-                item.id ===
-                select.value
-        );
-
-    const quantity =
-        parseInt(
-            quantityInput.value
-        );
-
-    if (
-        !drink ||
-        isNaN(quantity) ||
-        quantity <= 0
-    ) {
-
-        showMsg(
-
-            "restockMsg",
-
-            "Select a drink and enter a valid restock quantity.",
-
-            "warn"
-
-        );
-
-        return;
-    }
-
-    const confirmed =
-        await showActionConfirmation(
-            "Confirm Restock",
-            `Add ${quantity} stock to ${drink.name}?`,
-            "Restock"
-        );
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    drink.stock +=
-        quantity;
-
-    syncDrinkStatus(
-        drink
-    );
-
-    renderInventory();
-
-    populateAllSelects();
-
-    showMsg(
-        "restockMsg",
-        `${drink.name} was restocked successfully. Current stock: ${drink.stock}.`,
-        "success"
-    );
-
-}
-
-
-/* =========================================================
    LOAD DRINK FOR EDITING
 ========================================================= */
 
@@ -5765,7 +5679,7 @@ async function handleEditDrink() {
 
             "editDrinkMsg",
 
-            "Select a drink to edit.",
+            "Select a drink to restock or edit.",
 
             "warn"
 
@@ -5820,7 +5734,7 @@ async function handleEditDrink() {
 
             "editDrinkMsg",
 
-            "Enter valid drink information.",
+            "Enter valid drink information and stock quantity.",
 
             "warn"
 
@@ -5954,7 +5868,6 @@ function populateDrinkSelect() {
 
     const ids = [
         "drinkSelect",
-        "restockDrinkSelect",
         "editDrinkSelect"
     ];
 
