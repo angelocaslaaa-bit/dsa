@@ -1061,7 +1061,7 @@
 
                 <div class="card">
 
-                    <div class="row">
+                    <div class="row drinkOrderGrid">
         <div class="fieldGroup">
             <select id="drinkOrderTarget"></select>
         </div>
@@ -1072,18 +1072,7 @@
             <select id="orderSnackSelect" aria-label="Free Snack"></select>
         </div>
         <div class="fieldGroup">
-            <select id="drinkQty" aria-label="Quantity">
-                <option value="1">Quantity: 1</option>
-                <option value="2">Quantity: 2</option>
-                <option value="3">Quantity: 3</option>
-                <option value="4">Quantity: 4</option>
-                <option value="5">Quantity: 5</option>
-                <option value="6">Quantity: 6</option>
-                <option value="7">Quantity: 7</option>
-                <option value="8">Quantity: 8</option>
-                <option value="9">Quantity: 9</option>
-                <option value="10">Quantity: 10</option>
-            </select>
+            <input type="number" id="drinkQty" aria-label="Quantity" placeholder="Quantity" min="1" value="1">
         </div>
         <button onclick="handleDrinkOrder()">Place Order</button>
     </div>
@@ -1110,7 +1099,7 @@
 
                     <h3>Add New Drink</h3>
 
-                    <div class="row">
+                    <div class="row addDrinkGrid">
 
                         <div class="fieldGroup">
                             <input type="text" id="newDrinkName" placeholder="Enter drink name">
@@ -1121,14 +1110,13 @@
                         </div>
 
                         <div class="fieldGroup">
-                            <input type="number" id="newDrinkStock" placeholder="Enter stock quantity" min="0">
+                            <input type="number" id="newDrinkStock" aria-label="Stock quantity" placeholder="Enter stock quantity" min="0">
                         </div>
 
                         <div class="fieldGroup">
                             <input type="number" id="newDrinkPrice" placeholder="Enter selling price" min="0">
                         </div>
                         <div class="fieldGroup snackConditional" id="newSnackGroup" style="display:none;">
-                            <label class="miniLabel">Free Snack Choice</label>
                             <select id="newDrinkSnacks" aria-label="Free Snack Choice"></select>
                         </div>
 
@@ -1148,12 +1136,12 @@
 
                     <h3>Restock Drink</h3>
 
-                    <div class="row">
+                    <div class="row restockDrinkGrid">
         <div class="fieldGroup">
             <select id="restockDrinkSelect"></select>
         </div>
         <div class="fieldGroup">
-            <input type="number" id="restockQty" placeholder="Enter quantity" min="1">
+            <input type="number" id="restockQty" aria-label="Restock quantity" placeholder="Enter quantity" min="1">
         </div>
         <button class="secondary" onclick="handleRestock()">Restock</button>
     </div>
@@ -1166,7 +1154,7 @@
 
                     <h3>Edit Drink</h3>
 
-                    <div class="row">
+                    <div class="row editDrinkGrid">
 
                         <div class="fieldGroup">
                             <select id="editDrinkSelect" onchange="loadDrinkForEdit()"></select>
@@ -1185,10 +1173,9 @@
                         </div>
 
                         <div class="fieldGroup">
-                            <input type="number" id="editDrinkStock" placeholder="Enter stock quantity" min="0">
+                            <input type="number" id="editDrinkStock" aria-label="Stock quantity" placeholder="Enter stock quantity" min="0">
                         </div>
                         <div class="fieldGroup snackConditional" id="editSnackGroup" style="display:none;">
-                            <label class="miniLabel">Free Snack Choice</label>
                             <select id="editDrinkSnacks" aria-label="Free Snack Choice"></select>
                         </div>
 
