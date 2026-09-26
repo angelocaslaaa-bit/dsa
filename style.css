@@ -2063,3 +2063,58 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+/* EXPENSES + FREE SNACKS */
+.miniLabel { display:block; margin-bottom:5px; color:var(--muted); font-size:11px; }
+.snackConditional select[multiple] { height:auto !important; min-height:88px; }
+.expenseSummaryGrid, .salesFinancialSummary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:12px 0; }
+.expenseSummaryCard, .salesFinancialSummary .card { display:flex; flex-direction:column; gap:7px; }
+.expenseSummaryCard span, .salesFinancialSummary span { color:var(--muted); font-size:11.5px; }
+.expenseSummaryCard strong, .salesFinancialSummary strong { font-size:20px; color:var(--green); }
+.snackAddForm { display:grid; grid-template-columns:minmax(180px,1.5fr) minmax(150px,1fr) minmax(110px,.7fr) auto; gap:10px; align-items:center; margin-bottom:10px; }
+.snackAddForm > * { width:100%; min-width:0; margin:0; }
+.snackAddForm button { width:auto; min-height:42px; }
+.snackCostGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:12px 0 10px; }
+.snackCostItem { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.025); }
+.snackSetupInfo { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.snackSetupInfo strong { color:#dce3df; font-size:13px; }
+.snackSetupInfo span { color:var(--muted); font-size:11px; }
+.snackSetupActions { display:flex; gap:6px; flex-shrink:0; }
+.snackSetupActions button { width:auto; }
+.expenseFilters { display:grid; grid-template-columns:minmax(180px,1fr) 180px 180px; gap:10px; }
+@media(max-width:820px){ .expenseSummaryGrid,.salesFinancialSummary,.snackCostGrid,.expenseFilters,.snackAddForm{grid-template-columns:1fr;} .snackCostItem{align-items:flex-start; flex-direction:column;} }
+
+
+
+/* BILLING - EMPHASIZED GRAND TOTAL */
+#tab-billing .billingGrandTotal {
+    margin-top: 14px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--text);
+}
+
+/* SALES REPORT - EMPHASIZED GRAND TOTAL */
+#tab-sales-report .salesTotalRow td {
+    font-size: 17px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+#tab-sales-report .salesTotalRow td:last-child strong {
+    font-size: 22px;
+    color: var(--green);
+}
+
+/* FREE SNACK / QUANTITY DROPDOWNS */
+#newDrinkSnacks, #editDrinkSnacks, #orderSnackSelect, #drinkQty {
+    height: 42px;
+    min-height: 42px;
+}
+
+
+/* v5: Business-hours note */
+.businessHoursNote {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+}
